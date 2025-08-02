@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAMstore - Stripe Checkout</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<header>
+  <h1>AAMstore</h1>
+  <p>Pilih produk dan bayar aman via Stripe</p>
+</header>
+
+<main>
+  <div class="product-card">
+    <h2>Produk A</h2>
+    <p>Harga: Rp 10.000</p>
+    <button onclick="checkout('Produk A', 10000)">Beli Sekarang</button>
+  </div>
+  <div class="product-card">
+    <h2>Produk B</h2>
+    <p>Harga: Rp 25.000</p>
+    <button onclick="checkout('Produk B', 25000)">Beli Sekarang</button>
+  </div>
+  <div class="product-card">
+    <h2>Produk C</h2>
+    <p>Harga: Rp 50.000</p>
+    <button onclick="checkout('Produk C', 50000)">Beli Sekarang</button>
+  </div>
+</main>
+
+<script>
+async function checkout(productName, price) {
+  const response = await fetch('/api/create-checkout-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: productName, amount: price })
+  });
+  const session = await response.json();
+  const stripe = Stripe('GANTI_DENGAN_STRIPE_PUBLIC_KEY');
+  stripe.redirectToCheckout({ sessionId: session.id });
+}
+</script>
+
+</body>
+</html>
